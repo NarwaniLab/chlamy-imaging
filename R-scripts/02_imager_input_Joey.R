@@ -22,7 +22,7 @@ names(RFU_files) <- RFU_files %>%
   gsub(pattern = ".xls$", replacement = "")
 
 
-all_plates <- map_df(RFU_files, read_excel, range = "B42:N50", .id = "file_name") %>%
+all_plates <- map_df(RFU_files, read_excel, range = "B78:N86", .id = "file_name") %>%
   rename(row = X__1) %>% 
   mutate(file_name = str_replace(file_name, " ", "")) %>% 
   separate(col = file_name, into = c("file_path", "plate"),
@@ -47,13 +47,18 @@ all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
   mutate(plate = as.numeric(plate)) %>% 
   filter(!is.na(plate_key)) %>% 
   rename(fluor = RFU) %>% 
-  mutate(population = ifelse(population == "cc1629", "COMBO", population))
+  mutate(population = ifelse(population == "cc1629", "COMBO", population)) %>% 
+  left_join(., treatments) %>% 
+  filter(population != "COMBO")
 
 
 all_f_summ <- all_fluo %>% 
-  group_by(population, phosphate_concentration) %>% 
+  group_by(population, phosphate_concentration, treatment, ancestor_id) %>% 
   summarise_each(funs(mean, std.error), fluor)
 
 
 all_f_summ %>% 
-  ggplot(aes(x = population, y = mean, color = factor(phosphate_concentration))) + geom_point() 
+  ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
+  scale_color_viridis_c() +
+  facet_wrap( ~ phosphate_concentration, scales = "free")
+
