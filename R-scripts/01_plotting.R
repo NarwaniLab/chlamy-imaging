@@ -45,5 +45,9 @@ separate(col = file_name, into = c("file_path", "well"),
     summarise_each(funs(mean, max, min), cell_count, Area, Mean)
 
 
-all_fl4 <- left_join(all_fl3, plate_info, by = c("well", "plate"))
+all_fl4 <- left_join(all_fl3, plate_info, by = c("well", "plate")) %>% 
+  mutate(population = ifelse(population == "cc1629", "COMBO", population)) %>% 
+  select(population, phosphate_concentration, well, plate, well_plate, cell_count_max, Area_mean, Area_max, Mean_mean) %>% 
+  filter(!is.na(population)) %>% 
+  filter(population != "COMBO")
 
