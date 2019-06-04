@@ -62,12 +62,13 @@ run("Watershed");
 
 run("Set Measurements...", "area mean min display redirect="+replace(list[i],".TIF","-1.TIF")+" decimal=3");
 
-run("Analyze Particles...", "display exclude clear");
+run("Analyze Particles...", "size=5-75 display exclude clear");
 saveAs("Results", dir_output +replace(list[i],".tif","")+"_results.csv");
 run("Close");
 close();
 selectWindow(list[i]);
-close();
+close();
+
 }    
 
 
