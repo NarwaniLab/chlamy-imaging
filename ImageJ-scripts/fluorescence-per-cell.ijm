@@ -49,7 +49,7 @@ for (i=0; i<list.length; i++) {
 open(dir_input+list[i]);
 
 // set scale from pixels to µm
-run("Set Scale...", "distance=1.5509 known=1 pixel=1 unit=[ µm] global");
+run("Set Scale...", "distance=1221.3 known=1971.4 unit=µm");
 	
 // create duplicate image for later measurements on pixel intensities
 run("Duplicate...", "title"); 
