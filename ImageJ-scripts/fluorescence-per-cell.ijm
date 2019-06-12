@@ -47,6 +47,9 @@ for (i=0; i<list.length; i++) {
     
 // read reference image to be analyzed (the image origin (0,0) is the upper left corner)
 open(dir_input+list[i]);
+
+// set scale from pixels to µm
+run("Set Scale...", "distance=1.5509 known=1 pixel=1 unit=[ µm] global");
 	
 // create duplicate image for later measurements on pixel intensities
 run("Duplicate...", "title"); 
