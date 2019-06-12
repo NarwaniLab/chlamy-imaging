@@ -35,7 +35,7 @@ all_plates2 <- all_plates %>%
   mutate(column = formatC(column, width = 2, flag = 0)) %>%
   mutate(column = str_replace(column, " ", "0")) %>%
   unite(col = well, row, column, sep = "") %>%
-  filter(!is.na(RFU))
+  filter(!is.na(RFU)) 
 
 all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
   mutate(plate = as.numeric(plate)) %>% 
@@ -52,7 +52,7 @@ all_f_sum <- all_fluo %>%
 
 all_f_sum %>% 
   ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
-  scale_color_viridis_c()
+  scale_color_viridis_c() 
 
 
   

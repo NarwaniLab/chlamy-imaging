@@ -2,12 +2,13 @@ library(tidyverse)
 library(cowplot)
 library(readxl)
 library(plotrix)
+library(janitor)
 
 plate_layout <- read_excel("data-raw/chlamee-acclimated-plate-layout.xlsx") 
 plate_info <- read_csv("data-raw/chlamee-phosphate-rstar-plate-info.csv")
 
 treatments <- read_excel("data-general/ChlamEE_Treatments_JB.xlsx") %>% 
-  clean_names() %>% 
+  clean_names() %>% View
   mutate(treatment = ifelse(is.na(treatment), "none", treatment))
 
 
@@ -58,4 +59,4 @@ all_f_summ %>%
   ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
   scale_color_viridis_c() +
   facet_wrap(~ phosphate_concentration, scales = "free")
-ggsave("figures/practice-plot-fluo-Lenka.png", width = 12, height = 8)
+#ggsave("figures/practice-plot-fluo-Lenka.png", width = 12, height = 8)
