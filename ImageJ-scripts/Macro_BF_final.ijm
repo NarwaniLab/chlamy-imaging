@@ -3,6 +3,7 @@ dir_output = getDirectory("Choose Destination Directory");
 list = getFileList(dir_input);
 for (i=0; i<list.length; i++) {
 open(dir_input+list[i]);
+run("Set Scale...", "distance=1.5509 known=1 pixel=1 unit=[ µm] global");
 setAutoThreshold("Default dark no-reset");
 setOption("BlackBackground", false);
 run("Convert to Mask");
