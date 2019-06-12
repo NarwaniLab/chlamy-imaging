@@ -16,26 +16,26 @@ RFU_files <- RFU_files[grepl(".xls", RFU_files)]
 
 names(RFU_files) <- RFU_files %>% 
   gsub(pattern = ".xlsx$", replacement = "") %>% 
-  gsub(pattern = ".xls$", replacement = "")
+  gsub(pattern = ".xls$", replacement = "") 
 
 all_plates <- map_df(RFU_files, read_excel, range = "B78:N86", .id = "file_name") %>%
   rename(row = ...1) %>% 
   mutate(file_name = str_replace(file_name, " ", "")) %>% 
-  separate(col = file_name, into = c("file_path", "plate"),
+  separate(col = file_name, into = c("file_path", "plate"), 
            sep = c("phosphate_")) %>% 
   separate(col = plate, into = c("plate_new", "extra"),
            sep ="_") %>% 
   mutate(plate_new = str_replace(plate_new, "plate", "")) %>% 
-  mutate(plate = as.numeric(plate_new)) %>%
-  select(-plate_new)
+  mutate(plate = as.numeric(plate_new)) %>% 
+  select(-plate_new) %>% 
 
 all_plates2 <- all_plates %>% 
-  gather(key = column, value = RFU, 4:15) %>% 
+  gather(key = column, value = RFU, 4:15) %>% View
   unite(row, column, col = "well", remove = FALSE, sep = "") %>% 
   mutate(column = formatC(column, width = 2, flag = 0)) %>%
   mutate(column = str_replace(column, " ", "0")) %>%
   unite(col = well, row, column, sep = "") %>%
-  filter(!is.na(RFU)) 
+  filter(!is.na(RFU)) %>% 
 
 all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
   mutate(plate = as.numeric(plate)) %>% 
@@ -48,7 +48,7 @@ all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
 
 all_f_sum <- all_fluo %>% 
   group_by(population, phosphate_concentration, treatment, ancestor_id) %>% 
-  summarise_each(funs(mean, std.error), fluor)
+  summarise_each(funs(mean, std.error), fluor) %>%
 
 all_f_sum %>% 
   ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
