@@ -27,7 +27,7 @@ all_plates <- map_df(RFU_files, read_excel, range = "B78:N86", .id = "file_name"
            sep ="_") %>% 
   mutate(plate_new = str_replace(plate_new, "plate", "")) %>% 
   mutate(plate = as.numeric(plate_new)) %>% 
-  select(-plate_new) %>% 
+  select(-plate_new) 
 
 all_plates2 <- all_plates %>% 
   gather(key = column, value = RFU, 4:15) %>% View
@@ -35,7 +35,7 @@ all_plates2 <- all_plates %>%
   mutate(column = formatC(column, width = 2, flag = 0)) %>%
   mutate(column = str_replace(column, " ", "0")) %>%
   unite(col = well, row, column, sep = "") %>%
-  filter(!is.na(RFU)) %>% 
+  filter(!is.na(RFU))
 
 all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
   mutate(plate = as.numeric(plate)) %>% 
@@ -43,12 +43,12 @@ all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
   rename(fluor = RFU) %>% 
   #mutate(population = str_replace(population, "cc1629", "COMBO")) %>% 
   left_join(., treatments) %>% 
-  filter(population != "COMBO")
+  filter(population != "COMBO") 
 
 
 all_f_sum <- all_fluo %>% 
-  group_by(population, phosphate_concentration, treatment, ancestor_id) %>% 
-  summarise_each(funs(mean, std.error), fluor) %>%
+  group_by(population, phosphate_concentration, treatment, ancestor_id) %>%
+  summarise_each(funs(mean, std.error), fluor)
 
 all_f_sum %>% 
   ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
