@@ -35,9 +35,9 @@ all_plates2 <- all_plates %>%
   mutate(column = formatC(column, width = 2, flag = 0)) %>%
   mutate(column = str_replace(column, " ", "0")) %>%
   unite(col = well, row, column, sep = "") %>%
-  filter(!is.na(RFU))
+  filter(!is.na(RFU)) 
 
-all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
+all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>% View
   mutate(plate = as.numeric(plate)) %>% 
   filter(!is.na(plate_key)) %>% 
   rename(fluor = RFU) %>% 
