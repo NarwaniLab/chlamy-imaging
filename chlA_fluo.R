@@ -18,10 +18,10 @@ fluo_files[3]
 names(fluo_files) <- fluo_files %>% 
   gsub(pattern = ".csv$", replacement = "")
 
-all_wells <- map_df(fluo_files, read_csv, .id = "file_name") %>% View
+all_wells <- map_df(fluo_files, read_csv, .id = "file_name") %>%
   rename(cell_number = X1) %>% 
   separate(col = file_name, into = c("file_name", "plate"), 
-           sep = "plate_19/") %>% 
+           sep = "phosphate") %>% View
   #separate(col = plate, into = c("well", "plate"), 
   #sep = c("01_1_1_BrightField_001_results_plate","01_1_2_BrightField_001_results_plate")) %>% 
   mutate(plate = str_replace(plate, "01_1_1_BrightField_001_results_plate", "x")) %>%
