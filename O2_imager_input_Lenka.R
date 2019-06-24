@@ -30,7 +30,7 @@ all_plates <- map_df(RFU_files, read_excel, range = "B78:N86", .id = "file_name"
   select(-plate_new) 
 
 all_plates2 <- all_plates %>% 
-  gather(key = column, value = RFU, 4:15) %>% View
+  gather(key = column, value = RFU, 4:15) %>% 
   unite(row, column, col = "well", remove = FALSE, sep = "") %>% 
   mutate(column = formatC(column, width = 2, flag = 0)) %>%
   mutate(column = str_replace(column, " ", "0")) %>%
@@ -43,7 +43,7 @@ all_fluo <- left_join(all_plates2, plate_info, by = c("well", "plate")) %>%
   rename(fluor = RFU) %>% 
   #mutate(population = str_replace(population, "cc1629", "COMBO")) %>% 
   left_join(., treatments) %>% 
-  filter(population != "COMBO") 
+  filter(population != "COMBO")
 
 
 all_f_sum <- all_fluo %>% 
