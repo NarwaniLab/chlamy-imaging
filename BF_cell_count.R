@@ -21,7 +21,7 @@ names(BF_files) <- BF_files %>%
 all_wells <- map_df(BF_files, read_csv, .id = "file_name") %>% 
   rename(cell_number = X1) %>% 
   separate(col = file_name, into = c("file_name", "plate"), 
-           sep = "plate_19/") %>% 
+           sep = "plate_19/") %>% View
   #separate(col = plate, into = c("well", "plate"), 
   #sep = c("01_1_1_BrightField_001_results_plate","01_1_2_BrightField_001_results_plate")) %>% 
   mutate(plate = str_replace(plate, "01_1_1_BrightField_001_results_plate", "x")) %>%
