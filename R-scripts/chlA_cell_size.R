@@ -24,8 +24,8 @@ all_wells <- map_df(fluo_files, read_csv, .id = "file_name") %>%
            sep = "plate_28/") %>%
   #separate(col = plate, into = c("well", "plate"), 
   #sep = c("01_1_1_BrightField_001_results_plate","01_1_2_BrightField_001_results_plate")) %>% 
-  mutate(plate = str_replace(plate, "01_1_1_Chlorophyll_A_001_plate_", "x")) %>%
-  mutate(plate = str_replace(plate, "01_1_2_Chlorophyll_A_001_plate_", "x")) %>% 
+  mutate(plate = str_replace(plate, "01_1_1_Chlorophyll_001_results_plate_", "x")) %>%
+  mutate(plate = str_replace(plate, "01_1_2_Chlorophyll_001_results_plate_", "x")) %>% 
   separate(plate, into = c("well", "plate"),
            sep = "_x") %>%
   mutate(plate = as.numeric(plate)) %>% 
