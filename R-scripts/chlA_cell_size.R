@@ -11,7 +11,7 @@ treatments <- read_excel("data-general/ChlamEE_Treatments_JB.xlsx") %>%
   clean_names() %>% 
   mutate(treatment = ifelse(is.na(treatment), "none", treatment)) 
 
-fluo_files <- c(list.files("data-raw/results_chlA_ph_plate_28", full.names = TRUE))
+fluo_files <- c(list.files("data-raw/results_chla_ph_plate_19", full.names = TRUE))
 fluo_files <- fluo_files[grepl(".csv", fluo_files)] 
 fluo_files[3] 
 
@@ -21,13 +21,13 @@ names(fluo_files) <- fluo_files %>%
 all_wells <- map_df(fluo_files, read_csv, .id = "file_name") %>%
   rename(cell_count = X1) %>%
   separate(col = file_name, into = c("file_name", "plate"), 
-           sep = "plate_28/") %>%
+           sep = "_plate_19/") %>%
   #separate(col = plate, into = c("well", "plate"), 
   #sep = c("01_1_1_BrightField_001_results_plate","01_1_2_BrightField_001_results_plate")) %>% 
   mutate(plate = str_replace(plate, "01_1_1_Chlorophyll_001_results_plate_", "x")) %>%
   mutate(plate = str_replace(plate, "01_1_2_Chlorophyll_001_results_plate_", "x")) %>% 
   separate(plate, into = c("well", "plate"),
-           sep = "_x") %>%
+           sep = "_x") %>% 
   mutate(plate = as.numeric(plate)) %>% 
   separate(col = well, into = c("row", "column"),
            sep = 1) %>%
