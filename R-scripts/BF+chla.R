@@ -35,7 +35,8 @@ BF_wells <- map_df(BF_files, read_csv, .id = "file_name") %>%
            sep = 1) %>%
   mutate(column = formatC(column, width = 2, flag = 0)) %>% 
   mutate(column = str_replace(column, " ", "0")) %>% 
-  unite(col = well, row, column, sep = "")
+  unite(col = well, row, column, sep = "") %>%
+  rename(BF_cell_size = Area)
 
 BF_wells2 <- left_join(BF_wells, plate_info, by = c("well", "plate")) %>%
   mutate(plate = as.numeric(plate)) %>% 
@@ -45,11 +46,12 @@ BF_wells2 <- left_join(BF_wells, plate_info, by = c("well", "plate")) %>%
 
 all_BF <- BF_wells2 %>% 
   group_by(population, phosphate_concentration, treatment, ancestor_id, well, plate) %>%
-  summarise_each(funs(mean, std.error), Area)
+  summarise_each(funs(mean, std.error), BF_cell_size) %>% 
+  rename (BF_cell_size = mean)
 
 all_BF %>% 
-  ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
-  scale_color_viridis_c()   
+  ggplot(aes(x = treatment, y = BF_cell_size, color = phosphate_concentration)) + geom_point() +
+  scale_color_viridis_c() + labs(y = "BF cell size")
 
 
 # Fluo
@@ -76,25 +78,36 @@ fluo_wells <- map_df(fluo_files, read_csv, .id = "file_name") %>%
            sep = 1) %>%
   mutate(column = formatC(column, width = 2, flag = 0)) %>% 
   mutate(column = str_replace(column, " ", "0")) %>% 
-  unite(col = well, row, column, sep = "")
+  unite(col = well, row, column, sep = "") %>% 
+  filter(well == "F08")
 
 fluo_wells2 <- left_join(fluo_wells, plate_info, by = c("well", "plate")) %>%
   mutate(plate = as.numeric(plate)) %>% 
   filter(!is.na(plate_key)) %>% 
   left_join(., treatments) %>% 
-  filter(population != "COMBO") 
+  filter(population != "COMBO")  %>% 
+  separate(Label, into = c("photo_nbr", "rest"),
+           sep = "_Chlorophyll") %>%
+  separate(photo_nbr, into = c("rest2", "number"),
+           sep = -1)
 
 all_fluo <- fluo_wells2 %>% 
-  group_by(population, phosphate_concentration, treatment, ancestor_id, well, plate) %>%
-  summarise_each(funs(mean, std.error), Area)
+  rename(fluo_cell_size = Area) %>% View
+  group_by(population, phosphate_concentration, treatment, ancestor_id, well, plate, number) %>%
+  summarise_each(funs(mean, std.error), fluo_cell_size) %>% 
+  rename (fluo_cell_size = mean)
 
 all_fluo %>% 
-  ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
-  scale_color_viridis_c()
+  ggplot(aes(x = treatment, y = fluo_cell_size, color = phosphate_concentration)) + geom_point() +
+  scale_color_viridis_c() + labs(y = "fluo cell size")
 
-fluo_BF <- full_join(all_fluo, all_BF, by = c("mean", "treatment", "ancestor_id", "well", "plate", "phosphate_concentration", "std.error", "population"))
+fluo_BF <- left_join(all_fluo, all_BF, by = c("well"))
 
+#fluo_BF %>% 
+  #ggplot(aes(x = treatment, y = fluo_cell_size + BF_cell_size, color = phosphate_concentration)) + geom_point() +
+  #scale_color_viridis_c()
 fluo_BF %>% 
-  ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
-  scale_color_viridis_c()
+  ggplot(aes(x = fluo_cell_size, y = BF_cell_size)) + geom_point() + 
+  geom_abline(yintercept = 0, slope = 1) 
+#+ xlim(30, 45) + ylim(30, 45)
 

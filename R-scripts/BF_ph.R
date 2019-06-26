@@ -51,6 +51,6 @@ all_BF <- all_wells2 %>%
 
 all_BF %>% 
   ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
-  scale_color_viridis_c()   
+  scale_color_viridis_c() + labs(y = "average cell size")
 
 
