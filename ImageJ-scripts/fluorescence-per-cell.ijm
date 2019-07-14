@@ -47,6 +47,9 @@ for (i=0; i<list.length; i++) {
     
 // read reference image to be analyzed (the image origin (0,0) is the upper left corner)
 open(dir_input+list[i]);
+
+// set scale from pixels to µm
+run("Set Scale...", "distance=1221.3 known=1971.4 unit=µm");
 	
 // create duplicate image for later measurements on pixel intensities
 run("Duplicate...", "title"); 
@@ -62,12 +65,13 @@ run("Watershed");
 
 run("Set Measurements...", "area mean min display redirect="+replace(list[i],".TIF","-1.TIF")+" decimal=3");
 
-run("Analyze Particles...", "display exclude clear");
+run("Analyze Particles...", "size=5-75 display exclude clear");
 saveAs("Results", dir_output +replace(list[i],".tif","")+"_results.csv");
 run("Close");
 close();
 selectWindow(list[i]);
-close();
+close();
+
 }    
 
 
