@@ -9,17 +9,17 @@ plate_info <- read_csv("data-raw/chlamee-phosphate-rstar-plate-info.csv")
 
 treatments <- read_excel("data-general/ChlamEE_Treatments_JB.xlsx") %>% 
   clean_names() %>% 
-  mutate(treatment = ifelse(is.na(treatment), "none", treatment)) 
+  mutate(treatment = ifelse(is.na(treatment), "none", treatment))
 
 BF_files <- c(list.files("data-raw/results_BF_ph", full.names = TRUE))
 BF_files <- BF_files[grepl(".csv", BF_files)] 
 BF_files[1] 
 
 names(BF_files) <- BF_files %>% 
-  gsub(pattern = ".csv$", replacement = "") 
+  gsub(pattern = ".csv$", replacement = "")
 
-all_wells <- map_df(BF_files, read_csv, .id = "file_name") %>% 
-  rename(cell_number = X1) %>% 
+all_wells <- map_df(BF_files, read_csv, .id = "file_name") %>%
+  rename(cell_number = X1) %>% View
   separate(col = file_name, into = c("file_name", "plate"), 
            sep = "ph/") %>%
   #separate(col = plate, into = c("well", "plate"), 
