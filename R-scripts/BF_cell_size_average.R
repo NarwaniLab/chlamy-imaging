@@ -47,7 +47,7 @@ all_wells2 <- left_join(all_wells, plate_info, by = c("well", "plate")) %>%
 
 all_BF <- all_wells2 %>% 
   group_by(population, phosphate_concentration, treatment, ancestor_id, well) %>%
-  summarise_each(funs(mean, std.error), Area) %>% View
+  summarise_each(funs(mean, std.error), Area)
 all_BF %>% 
   ggplot(aes(x = treatment, y = mean, color = phosphate_concentration)) + geom_point() +
   scale_color_viridis_c()   
